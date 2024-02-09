@@ -1,9 +1,7 @@
 # pylint: disable=E0213
 
 from datetime import datetime, date
-from typing import Dict
 from pydantic import BaseModel, Field, validator
-
 
 
 class Deposit(BaseModel):
