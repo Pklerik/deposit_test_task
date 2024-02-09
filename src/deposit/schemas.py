@@ -41,7 +41,7 @@ class Deposit(BaseModel):
         if 1 <= periods <= 60:
             return periods
         else:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'periods' mast be between 1 and 60"})
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'periods' must be between 1 and 60"})
         
     @validator('amount')
     @classmethod
@@ -60,7 +60,7 @@ class Deposit(BaseModel):
         if 10_000 <= amount <= 3_000_000:
             return amount
         else:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'amount' mast be between 10 000 and 3 000 000"})
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'amount' must be between 10 000 and 3 000 000"})
         
     @validator('rate')
     @classmethod
@@ -79,4 +79,4 @@ class Deposit(BaseModel):
         if 1 <= rate <= 8:
             return rate
         else:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'rate' mast be between 1 and 8"})
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'rate' must be between 1 and 8"})
