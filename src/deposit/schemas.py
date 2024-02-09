@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field, validator
 class Deposit(BaseModel):
     date:str
     periods:int
-    amount:int = Field(..., ge=10_000, le=3_000_000)
-    rate:float = Field(..., ge=1.00, le=8.00)
+    amount:int 
+    rate:float
 
     @validator('date')
     @classmethod
