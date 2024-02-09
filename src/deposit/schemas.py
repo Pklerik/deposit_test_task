@@ -1,26 +1,35 @@
 from fastapi import HTTPException, status
 from datetime import datetime, date as date_cl
 from pydantic import BaseModel, Field, validator
+from fastapi.exceptions import RequestValidationError
+
 
 
 class Deposit(BaseModel):
     date:str
     periods:int
-    amount:int 
+    amount:int
     rate:float
 
     @validator('date')
     @classmethod
-    def validate_str_date(cls, date_input:date_cl) -> date_cl: #
+    def validate_str_date(cls, date_input:date_cl) -> date_cl:
         """validator for 'date' field
 
         Args:
             date_input (date): date of request
 
+        Raises:
+            RequestValidationError: rises in any ValueError in date transformation
+            
         Returns:
             date: date of request after validation on format <%d.%m.%Y>
         """
-        return datetime.strptime(date_input, '%d.%m.%Y').date()  # convert string to date
+       
+        try:
+            return datetime.strptime(date_input, '%d.%m.%Y').date()  # convert string to date
+        except ValueError:
+            raise RequestValidationError(errors="'date' must be in dd.mm.YYYY format")
     
 
     #TODO rewrite exception handler to remove detail key from error response
@@ -41,7 +50,7 @@ class Deposit(BaseModel):
         if 1 <= periods <= 60:
             return periods
         else:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'periods' must be between 1 and 60"})
+            raise RequestValidationError(errors="'periods' must be between 1 and 60")
         
     @validator('amount')
     @classmethod
@@ -60,7 +69,7 @@ class Deposit(BaseModel):
         if 10_000 <= amount <= 3_000_000:
             return amount
         else:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'amount' must be between 10 000 and 3 000 000"})
+            raise RequestValidationError(errors="'amount' must be between 10 000 and 3 000 000")
         
     @validator('rate')
     @classmethod
@@ -79,4 +88,4 @@ class Deposit(BaseModel):
         if 1 <= rate <= 8:
             return rate
         else:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error":"'rate' must be between 1 and 8"})
+            raise RequestValidationError(errors="'rate' must be between 1.00 and 8.00")
