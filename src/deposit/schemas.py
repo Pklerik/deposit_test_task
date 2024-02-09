@@ -12,7 +12,7 @@ class Deposit(BaseModel):
     @validator('date')
     @classmethod
     def validate_str_date(cls, date_input:date_cl) -> date_cl: #
-        """_summary_
+        """validator for 'date' field
 
         Args:
             date_input (date): date of request
@@ -27,6 +27,17 @@ class Deposit(BaseModel):
     @validator('periods')
     @classmethod
     def validate_periods(cls, periods:int) -> int:
+        """validator for 'periods' field
+
+        Args:
+            periods (int): amount of months for deposit
+
+        Raises:
+            HTTPException: raises then periods < 1 or periods > 60
+
+        Returns:
+            int: amount of periods
+        """
         if 1 <= periods <= 60:
             return periods
         else:
@@ -35,6 +46,17 @@ class Deposit(BaseModel):
     @validator('amount')
     @classmethod
     def validate_amount(cls, amount:int) -> int:
+        """validator for 'amount' field
+
+        Args:
+            amount (int): amount of money for deposit
+
+        Raises:
+            HTTPException: raises then amount < 10_000 or amount > 3_000_000
+
+        Returns:
+            int: amount of money for deposit
+        """
         if 10_000 <= amount <= 3_000_000:
             return amount
         else:
@@ -43,6 +65,17 @@ class Deposit(BaseModel):
     @validator('rate')
     @classmethod
     def validate_rate(cls, rate:float) -> float:
+        """validator for 'rate' field
+
+        Args:
+            rate (float): deposit rate for current deposit
+
+        Raises:
+            HTTPException: raises then rate < 1.00 or rate > 8.00
+
+        Returns:
+            float:deposit rate for current deposit
+        """
         if 1 <= rate <= 8:
             return rate
         else:
