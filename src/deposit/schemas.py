@@ -1,4 +1,3 @@
-# pylint: disable=E0213
 
 from datetime import datetime, date
 from pydantic import BaseModel, Field, validator
@@ -11,6 +10,7 @@ class Deposit(BaseModel):
     rate:float = Field(..., ge=1.00, le=8.00)
 
     @validator('date_of_request')
+    @classmethod
     def validate_str_date(cls, date_input:date) -> date: #
         """_summary_
 
