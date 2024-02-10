@@ -23,9 +23,9 @@ RUN echo "${PATH}"
 
 COPY --chown=app:app ./src /app/src
 COPY --chown=app:app ./main.py /app/main.py
-# COPY --chown=app:app ./scripts /app/scripts
+COPY --chown=app:app ./docker/entrypoints/run_server.sh /app/docker/entrypoints/run_server.sh
 
 WORKDIR /app
 USER app
 
-ENTRYPOINT [ "python", "-m", "uvicorn", "main:deposit_app", "--host", "0.0.0.0", "--port", "8000", "--reload" ]
+ENTRYPOINT [ "/app/docker/entrypoints/run_server.sh" ]
