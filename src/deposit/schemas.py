@@ -25,7 +25,12 @@ class Deposit(BaseModel):
         Returns:
             date: date of request after validation on format <%d.%m.%Y>
         """
-       
+        try:
+            day, month, year = date_input.split('.')
+            date_cl(int(year), int(month), int(day))
+        except ValueError as exc:
+            raise RequestValidationError(errors=" ".join(exc.args))
+        
         try:
             return datetime.strptime(date_input, '%d.%m.%Y').date()  # convert string to date
         except ValueError:
