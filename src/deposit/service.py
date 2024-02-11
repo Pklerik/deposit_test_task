@@ -16,5 +16,5 @@ def calculate_deposit(deposit_data:schemas.Deposit) -> dict:
     for iteration in range(1, deposit_data.periods + 1):
         date_of_payment = str(deposit_data.date + relativedelta(months=iteration - 1))
         amount = ((12 * 100) + deposit_data.rate) * amount / (12 * 100)
-        profit_by_dates.update({ date_of_payment : float(format(round(amount, 2), '.2f'))})
+        profit_by_dates.update({ date_of_payment : int(amount) if round(amount, 2).is_integer() else round(amount, 2)})
     return profit_by_dates
