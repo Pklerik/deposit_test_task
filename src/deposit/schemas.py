@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from datetime import datetime, date as date_cl
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, field_validator
 from fastapi.exceptions import RequestValidationError
 
 
@@ -11,7 +11,7 @@ class Deposit(BaseModel):
     amount:int
     rate:float
 
-    @validator('date')
+    @field_validator('date')
     @classmethod
     def validate_str_date(cls, date_input:date_cl) -> date_cl:
         """validator for 'date' field
@@ -29,11 +29,11 @@ class Deposit(BaseModel):
         try:
             return datetime.strptime(date_input, '%d.%m.%Y').date()  # convert string to date
         except ValueError:
-            raise RequestValidationError(errors="'date' must be in dd.mm.YYYY format")
+            raise RequestValidationError(errors="date must be in dd.mm.YYYY format")
     
 
     #TODO rewrite exception handler to remove detail key from error response
-    @validator('periods')
+    @field_validator('periods')
     @classmethod
     def validate_periods(cls, periods:int) -> int:
         """validator for 'periods' field
@@ -50,9 +50,9 @@ class Deposit(BaseModel):
         if 1 <= periods <= 60:
             return periods
         else:
-            raise RequestValidationError(errors="'periods' must be between 1 and 60")
+            raise RequestValidationError(errors="periods must be between 1 and 60")
         
-    @validator('amount')
+    @field_validator('amount')
     @classmethod
     def validate_amount(cls, amount:int) -> int:
         """validator for 'amount' field
@@ -69,9 +69,9 @@ class Deposit(BaseModel):
         if 10_000 <= amount <= 3_000_000:
             return amount
         else:
-            raise RequestValidationError(errors="'amount' must be between 10 000 and 3 000 000")
+            raise RequestValidationError(errors="amount must be between 10 000 and 3 000 000")
         
-    @validator('rate')
+    @field_validator('rate')
     @classmethod
     def validate_rate(cls, rate:float) -> float:
         """validator for 'rate' field
@@ -88,4 +88,4 @@ class Deposit(BaseModel):
         if 1 <= rate <= 8:
             return rate
         else:
-            raise RequestValidationError(errors="'rate' must be between 1.00 and 8.00")
+            raise RequestValidationError(errors="rate must be between 1.00 and 8.00")
