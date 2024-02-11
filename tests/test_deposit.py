@@ -26,30 +26,60 @@ def create_correct_request_body() -> List:
 @pytest.fixture
 def create_wrong_request_body() -> List:
     wrong_request_bodies = [
-        {"date must be in dd.mm.YYYY format" : {
-            "date": "33.22.1233",
-            "periods": 2,
-            "amount": 20_000,
-            "rate": 1
-            }},
-        {"periods must be between 1 and 60" : {
-            "date": "31.01.2024",
-            "periods": 0,
-            "amount": 20_000,
-            "rate": 1
-            }},
-        {"amount must be between 10 000 and 3 000 000" : {
-            "date": "31.01.2024",
-            "periods": 2,
-            "amount": 5,
-            "rate": 1
-            }},
-        {"rate must be between 1.00 and 8.00" : {
-            "date": "31.01.2024",
-            "periods": 2,
-            "amount": 20_000,
-            "rate": 0.5
-            }}
+        {
+            "error": "date must be in dd.mm.YYYY format",
+            "request": {
+                "date": "30.01.33",
+                "periods": 2,
+                "amount": 20000,
+                "rate": 1
+            }
+        },
+        {
+            "error": "day is out of range for month",
+            "request": {
+                "date": "33.01.33",
+                "periods": 2,
+                "amount": 20000,
+                "rate": 1
+            }
+        },
+        {
+            "error": "month must be in 1..12",
+            "request": {
+                "date": "31.13.33",
+                "periods": 2,
+                "amount": 20000,
+                "rate": 1
+            }
+        },
+        {
+            "error": "periods must be between 1 and 60",
+            "request": {
+                "date": "31.01.2024",
+                "periods": 0,
+                "amount": 20000,
+                "rate": 1
+            }
+        },
+        {
+            "error": "amount must be between 10 000 and 3 000 000",
+            "request": {
+                "date": "31.01.2024",
+                "periods": 2,
+                "amount": 5,
+                "rate": 1
+            }
+        },
+        {
+            "error": "rate must be between 1.00 and 8.00",
+            "request": {
+                "date": "31.01.2024",
+                "periods": 2,
+                "amount": 20000,
+                "rate": 0.5
+            }
+        }
     ]
     return wrong_request_bodies
 
@@ -60,11 +90,10 @@ def test_deposit(create_correct_request_body):
         assert response.status_code == 200
         
 def test_deposit_erorrs(create_wrong_request_body):
-    for request_data_dict in create_wrong_request_body:
-        for error, request_data in request_data_dict.items():
-            response = client.post("/deposit", headers={ "Accept": "application/json", "Content-Type": "application/json" }, json=request_data)
-            assert response.status_code == 400
-            assert response.json() == {'error': error}
+    for request_error in create_wrong_request_body:
+        response = client.post("/deposit", headers={ "Accept": "application/json", "Content-Type": "application/json" }, json=request_error.get("request"))
+        assert response.status_code == 400
+        assert response.json() == {'error': request_error.get("error")}
             
 def test_data_validation():
     valid_requests_responses = [
