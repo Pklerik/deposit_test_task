@@ -25,9 +25,9 @@ COPY --chown=app:app ./src /app/src
 COPY --chown=app:app ./main.py /app/main.py
 COPY --chown=app:app ./tests /app/tests
 COPY --chown=app:app ./pyproject.toml /app/pyproject.toml
-COPY --chown=app:app ./docker/entrypoints/run_server.sh /app/docker/entrypoints/
+COPY --chown=app:app ./docker/entrypoints/run_server.sh /app/docker/entrypoints/run_server.sh
 
 WORKDIR /app
 USER app
 
-ENTRYPOINT [ "/app/docker/entrypoints/run_server.sh" ]
+ENTRYPOINT [ "bash", "/app/docker/entrypoints/run_server.sh" ]
