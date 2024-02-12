@@ -26,8 +26,8 @@ fi
 if [ $# -eq 0 ];
     then
         echo "INFO : Starting docker service on port 8000"
-        docker run --rm -t -p 8000:8000 deposit_service:latest
+        docker run --rm -d -p 8000:8000 deposit_service:latest
     else
         echo "INFO : Starting docker service on port $1"
-        docker run --rm -t -p $1:8000 deposit_service:latest
+        docker run --rm -d -p $1:8000 deposit_service:latest
 fi
